@@ -31,8 +31,8 @@ impl Web3Client {
 		}
 	}
 
-	pub fn get_accounts(self) -> RpcResponse {
-		let accounts_command = r#"{"jsonrpc":"2.0","method":"eth_accounts","params":[],"id":1}"#;
+	pub fn is_connected(self) -> RpcResponse {
+		let accounts_command = r#"{"jsonrpc":"2.0","method":"net_peerCount","params":[],"id":74}"#;
 
 		match self.client
 		.post("http://localhost:8545")
@@ -48,8 +48,34 @@ impl Web3Client {
 				id: 0,
 				jsonrpc: 0.0,
 				result: !vec(),
-				error: Some("Error"),
+				error: Some("Error calling net_peerCount")
+			}
+		}
+	}
+
+	pub fn get_accounts(self) -> RpcResponse {
+		let accounts_command = r#"{"jsonrpc":"2.0","method":"eth_accounts","params":[],"id":1}"#;
+
+		match self.client
+		.post("http://localhost:8545")
+		.body(accounts_command)
+		.headers(self.headers)
+		.send() {
+			Ok(mut response) => {
+				let mut buf = String::new();
+				response.read_to_string(&mut buf).unwrap();
+				let decoded: RpcResponse = json::decode(&buf).unwrap()
+			},
+			Err(_) => RpcResponse {
+				id: 0,
+				jsonrpc: 0.0,
+				result: !vec(),
+				error: Some("Error calling eth_accounts"),
 			},
 		}
+	}
+
+	pub fn get_work(self) -> RpcResponse {
+
 	}
 }
