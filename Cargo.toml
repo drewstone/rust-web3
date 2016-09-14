@@ -1,0 +1,8 @@
+[package]
+name = "eth_rpc"
+version = "0.1.0"
+authors = ["Drew Stone <drewstone329@gmail.com>"]
+
+[dependencies]
+hyper = "0.9.10"
+rustc-serialize = "0.3.19"
