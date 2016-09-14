@@ -8,5 +8,5 @@ use web3_api::{ Web3Client };
 
 fn main() {
 	let web3 = Web3Client::new();
-	web3.get_accounts();
+	println!("{:?}", web3.get_accounts());
 }

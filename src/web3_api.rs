@@ -5,14 +5,11 @@ use hyper::mime::{Mime, TopLevel, SubLevel, Attr, Value};
 
 use rustc_serialize::json;
 
-pub struct Result 
-
-#[derive(RustcDecodable)]
+#[derive(RustcDecodable, Debug)]
 pub struct RpcResponse {
 	id: usize,
 	jsonrpc: f64,
 	result: Vec<String>,
-	error: Option<String>
 }
 
 pub struct Web3Client {
@@ -31,51 +28,23 @@ impl Web3Client {
 		}
 	}
 
-	pub fn is_connected(self) -> RpcResponse {
-		let accounts_command = r#"{"jsonrpc":"2.0","method":"net_peerCount","params":[],"id":74}"#;
-
-		match self.client
-		.post("http://localhost:8545")
-		.body(accounts_command)
-		.headers(self.headers)
-		.send() {
-			Ok(mut response) => {
-				let mut buf = String::new();
-    			response.read_to_string(&mut buf).unwrap();
-    			let decoded: RpcResponse = json::decode(&buf).unwrap()
-			},
-			Err(_) => RpcResponse {
-				id: 0,
-				jsonrpc: 0.0,
-				result: !vec(),
-				error: Some("Error calling net_peerCount")
-			}
-		}
-	}
-
 	pub fn get_accounts(self) -> RpcResponse {
 		let accounts_command = r#"{"jsonrpc":"2.0","method":"eth_accounts","params":[],"id":1}"#;
 
-		match self.client
+		let mut result: RpcResponse = match self.client
 		.post("http://localhost:8545")
 		.body(accounts_command)
 		.headers(self.headers)
 		.send() {
-			Ok(mut response) => {
-				let mut buf = String::new();
-				response.read_to_string(&mut buf).unwrap();
-				let decoded: RpcResponse = json::decode(&buf).unwrap()
+			Ok(mut res) => {
+				let mut buf: String = String::new();
+				res.read_to_string(&mut buf).unwrap();
+				let decoded: RpcResponse = json::decode(&buf).unwrap();
+				decoded
 			},
-			Err(_) => RpcResponse {
-				id: 0,
-				jsonrpc: 0.0,
-				result: !vec(),
-				error: Some("Error calling eth_accounts"),
-			},
-		}
-	}
+			Err(_) => panic!("error".to_string()),
+		};
 
-	pub fn get_work(self) -> RpcResponse {
-
+		result
 	}
 }
