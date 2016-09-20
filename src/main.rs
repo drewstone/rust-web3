@@ -1,6 +1,6 @@
 mod web3_api;
 
-extern crate eth_rpc;
+extern crate rust_web3;
 extern crate hyper;
 extern crate rustc_serialize;
 

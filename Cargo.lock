@@ -1,5 +1,5 @@
 [root]
-name = "rust-web3"
+name = "rust_web3"
 version = "0.1.0"
 dependencies = [
  "hyper 0.9.10 (registry+https://github.com/rust-lang/crates.io-index)",
